@@ -33,7 +33,10 @@
 #' @import ape
 #' @import geoscale
 
-#' @importFrom stats runif
+#' @importFrom graphics par points rect segments text
+#' @importFrom grDevices rgb
+#' @importFrom stats pnorm runif sd
+#' @importFrom utils data setTxtProgressBar txtProgressBar
 NULL
 
 #' Phylogeny and age data for the Asaphidae
