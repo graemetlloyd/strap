@@ -1,7 +1,7 @@
 Package: Claddis
 Type: Package
 Title: Stratigraphic Tree Analysis for Palaeontology
-Version: 1.4-2
+Version: 1.5-0
 Date: 2019-08-16
 Authors@R: c(
     person(given = "Mark A.", family = "Bell",
