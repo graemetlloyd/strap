@@ -147,13 +147,21 @@ fit.to.strat.2 <- StratPhyloCongruence(trees = Dipnoi$tree, ages = Dipnoi$ages, 
 }
 \references{
 Bell, M. A. and Lloyd, G. T., 2015. strap: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence. Palaeontology, 58, 379-389.
+
 Benton, M. J. and Storrs, G. W., 1994. Testing the quality of the fossil record: palaeontological knowledge is improving. Geology, 22, 111-114.
+
 Boyd, C. A., Cleland, T. P., Marrero, N. L. and Clarke, J. A., 2011. Exploring the effects of phylogenetic uncertainty and consensus trees on stratigraphic consistency scores: a new program and a standardized method. Cladistics, 27, 52-60.
+
 Huelsenbeck, J. P., 1994. Comparing the stratigraphic record to estimates of phylogeny. Paleobiology, 20, 470-483.
+
 Pol, D. and Norell, M. A., 2001. Comments on the Manhattan Stratigraphic Measure. Cladistics, 17, 285-289.
+
 Pol, D. and Norell, M. A., 2006. Uncertainty in the age of fossils and the stratigraphic fit to phylogenies. Systematic Biology, 55, 512-521.
+
 Siddall, M. E., 1998. Stratigraphic fit to phylogenies: a proposed solution. Cladistics, 14, 201-208.
+
 Wills, M. A., 1999. Congruence between phylogeny and stratigraphy: randomization tests and the Gap Excess Ratio. Systematic Biology, 48, 559-580.
+
 Wills, M. A., Barrett, P. M. and Heathcote, J. F., 2008. The modified Gap Excess Ratio (GER*) and the stratigraphic congruence of dinosaur phylogenies. Systematic Biology, 57, 891-904.
 }
 \author{
