@@ -1,0 +1,120 @@
+\name{geoscalePhylo}
+\alias{geoscalePhylo}
+\title{Plots a phylogeny against the geological time scale.}
+\description{Plots a time-scaled phylogeny against the international geological time scale.}
+\usage{geoscalePhylo(tree, ages, direction="rightwards", units=c("Period", "Epoch", "Age"), 
+ boxes="Age", tick.scale="myr", user.scale, cex.age=0.3, cex.ts=0.3, cex.tip=0.3, 
+ width=1, label.offset, ts.col=TRUE, vers="ICS2013", x.lim, quat.rm=FALSE, erotate, 
+ arotate, urotate,...)}
+\arguments{
+  \item{tree}{A tree as a phylo object.}
+  \item{ages}{A dataset containing the first and last appearence datums,"FAD" and "LAD" respectively, of all taxa in the phylogeny. See the object $ages in data(Dipnoi) for an example.}
+  \item{direction}{The direction the tree is to be plotted in, options include "rightwards" and "upwards", see help(plot.phylo).}
+  \item{units}{The temporal unit(s) to be included in the timescale, options include: "Eon", "Era", "Period", "Epoch", "Age" and "User". The option "User" is required when including a user-defined timescale. This also requires an object to be assigned to user.scale (see Details).}
+  \item{boxes}{Option for including grey boxes at a certain temporal resolution, options are the same as for units.}
+  \item{tick.scale}{The resolution of the tick marks at the base of the timescale, the default is the same as units. The resolution of the scale can also be chosen by specifiying a value or removed entirely by using "no".} 
+  \item{user.scale}{The data object to be used when including a user-defined time scale, requires the option "User" to be included in units. See data(UKzones) as an example of the required data format.}
+  \item{cex.age}{Size of the text on the scale bar.}
+  \item{cex.ts}{Size of the text on the geological time scale.}
+  \item{cex.tip}{Size of the tip labels on the phylogeny}
+  \item{width}{Width of the edges of the phylogeny.}
+  \item{label.offset}{A value for the distance between the nodes and tip labels, see help(plot.phylo).}
+  \item{ts.col}{Option for using standard ICS colours on the time scale.}
+  \item{vers}{The version of the geological time scale to use. Options include: "ICS2013", "ICS2012", "ICS2010", "ICS2009" or "ICS2008".}
+  \item{x.lim}{A two item statement for the geological range, in millions of years, of the plot i.e. (0,65). If only one value is used it will be used as the upper limit, see help(plot.phylo).}
+  \item{quat.rm}{Option to remove the names from Quaternary time bins, useful when plotting clades with long durations that range through to the recent.}
+  \item{erotate}{A numerical value for the rotation for the Epoch/Series temporal units, default values are 0 when direction = "upwards" and 90 when direction = "rightwards".} 
+  \item{arotate}{A numerical value for the rotation for the Age/Stage temporal units, default values are 0 when direction = "upwards" and 90 when direction = "rightwards".} 
+  \item{urotate}{A numerical value for the rotation for the User temporal units, default values are 0 when direction = "upwards" and 90 when direction = "rightwards".}
+  \item{...}{All other arguments passed to plot.phylo} 
+}
+\details{
+
+Often palaeontologists wish to display phylogenetic trees against a geological time scale for easy visualization of the temporal position of the taxa the generation of which can be time-consuming. geoscalePhylo fills this need and works in ths same way as geoscale.plot from the package geoscale and allows users to plot a time-scaled phylogeny against the International Chronostratigraphic Chart (Gradstein, 2014). This function accepts any tree time-scaled through either the function DatePhylo in this package or the timePaleoPhy function in the library paleotree. 
+
+Built-in options allows the user control over which direction the tree is plotted in (either horizonally or vertically) as well as deciding which temporal units are included in the time scale (see below for example).
+
+\bold{Temporal units}
+
+The function geoscalePhylo allows for a time-scaled phylogeny to be plotted against geologic time using either the current geologic time scale of Gradstein et al., 2012 or previously published time scales by the International Commisioin on Stratigraphy. The time scale that is plotted is comprised of a number of temporal components representing the different units that the geological time scale is divided into. There are five main temporal units that can be included, each of which have two alternative names and are as follows: Eon (Eonothem), Era (Erathem), System (Period), Series (Epoch), and Stage (Age). These alternative names can be used interchangably  i.e. both Eon and Erathem are accepted, however should both these alternative names be included then that temporal unit will only be included once. In addition, the order in which they are included into units does not affect the order in which they appear in the chart so units=c("Period","Epoch","Age") will produce the same results as units=c("Age","Epoch","Period") with the default order as they were listed previously with Eons plotted at the base and Stages at the top.
+
+\bold{Including a user-defined time scale}
+
+There is a sixth option that can be included into the \code{units} argument. "User" allows for an additional temporal unit to be plotted i.e. biozonal or terrane-specific time scales. This requires a matrix of three columns named "Start", "End" and "Name" representing the bottom, top of each temporal bin (in millions of years) and the name to be plotted respectively. An example dataset called \code{UKzones} representing Stages of the UK Ordovician System is included in the package. See below for an example of how to implement this option. 
+
+\bold{Stratigraphic ranges}
+
+geoscalePhylo allows for the stratigraphic ranges to be included in the plot. This requires an matrix with the first appearance and last appearance dates in millions of years (FAD and LAD respectively) with the row names containing all the tip labels of the taxa in the tree, exactly as they appear in \code{tree$tip.label} and the column names should be "FAD" and "LAD". In order to add the stratigraphic ranges to the plot this matrix should be attached to the argument ages. See below for an example of this option.
+
+\bold{Apparent appearance of polytomies}
+
+It should be noted that using certain methods for time-scaling a tree, such as the "basic" method (the default), it can create the appearance of polytomies in a tree is otherwise fully resolved due to the presence of a large number of zero length branches. This can be solved by using another time-scaling method such as the "equal" method which will enforce all the branches to have a positive length. 
+
+}
+
+\references{
+
+Gradstein, F. M., Ogg, J. M., and Schmitz, M. 2012. A Geologic Time Scale. Elsevier, Boston, USA
+
+}
+
+\author{Mark A. Bell \email{mark.bell521@gmail.com}}
+
+\examples{
+
+### Example lungfish data
+data(Dipnoi)
+
+tree_l <- DatePhylo(Dipnoi$tree, Dipnoi$ages, method="equal", rlen=1)
+
+geoscalePhylo(tree=tree_l, boxes="Age", cex.tip=0.4)
+
+# Plotting the tree with the stratigraphical ranges included
+
+geoscalePhylo(tree=tree_l, ages=Dipnoi$ages, boxes="Age", cex.tip=0.4)
+
+# Including all temporal units into the stratigraphic column
+
+geoscalePhylo(tree_l, Dipnoi$ages, units = c("Eon","Era","Period","Epoch","Age"),
+  boxes="Age", cex.tip=0.4)
+
+# Plotting the numerical values on the time scale at Age resolution
+
+geoscalePhylo(tree_l, Dipnoi$ages, units = c("Eon","Era","Period","Epoch","Age"),
+  boxes="Age", cex.tip=0.4,tick.scale="Age")
+
+### Example trilobite data
+data(Asaphidae)
+
+tree_a <- DatePhylo(Asaphidae$trees[[1]], Asaphidae$ages, method="equal", rlen=1)
+
+geoscalePhylo(ladderize(tree_a), Asaphidae$ages, boxes="Age", x.lim=c(504,435), 
+  cex.tip=0.5, cex.ts=0.5,vers="ICS2009") 
+
+# Plotting the tree vertically
+
+geoscalePhylo(ladderize(tree_a), Asaphidae$ages, boxes="Age", x.lim=c(504,435), 
+  cex.tip=0.5, cex.ts=0.5,direction="upwards",vers="ICS2009") 
+
+# Including a user-defined time scale
+
+data(UKzones)
+data(Asaphidae)
+
+tree_a <- DatePhylo(Asaphidae$trees[[1]], Asaphidae$ages, method="equal", rlen=1)
+
+geoscalePhylo(ladderize(tree_a), Asaphidae$ages, units = c("Eon","Era","Period",
+  "Epoch","User"), boxes="Age", cex.tip=0.4,user.scale=UKzones,
+  vers="ICS2009",cex.ts=0.5,x.lim=c(440),direction="upwards")
+
+# Rotating the text on the time scale
+
+tree_a <- DatePhylo(Asaphidae$trees[[1]], Asaphidae$ages, method="equal", rlen=1)
+
+geoscalePhylo(ladderize(tree_a), Asaphidae$ages, units = c("Period",
+  "Epoch","Age","User"), boxes="Age", cex.tip=0.4,user.scale=UKzones,
+  vers="ICS2009",cex.ts=0.5,x.lim=c(440),arotate=0,erotate=0,urotate=0)
+
+}
+
+\keyword{time scale, geological, plot, phylogeny, tree}

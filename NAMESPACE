@@ -1,0 +1,7 @@
+exportPattern("^[[:alpha:]]+")
+export(DatePhylo)
+export(FindDescendants)
+export(geoscalePhylo)
+export(StratPhyloCongruence)
+import(ape)
+import(geoscale)

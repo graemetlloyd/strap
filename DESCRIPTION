@@ -1,0 +1,12 @@
+Package: strap
+Type: Package
+Title: Stratigraphic Tree Analysis for Palaeontology
+Version: 1.4-1
+Date: 2014-12-03
+Author: Mark A. Bell <mark.bell521@gmail.com> Graeme T. Lloyd <graemetlloyd@gmail.com>.
+Maintainer: Mark A. Bell <mark.bell521@gmail.com>
+Depends: ape,geoscale
+Description: Functions for the stratigraphic analysis of phylogenetic trees.
+License: GPL (>=2)
+LazyData: yes
+ByteCompile: yes

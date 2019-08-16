@@ -1,0 +1,17 @@
+Version - 1.4 - 2014-10-31
+
+- Added three arguments to geoscalePhylo (erotate,arotate and urotate) that allows for the text in the Epoch, Age and User temporal units to be rotated by the user.
+- Issue fixed that stopped geoscalePhylo plotting properly when terminal ranges were added to the tree using either DatePhylo or timePaleoPhy (paleotree package).
+- Incompatibility with ape fixed that caused an error when plotting a tree with geoscalePhylo that did not include stratigraphic ranges.
+- The option for geoscalePhylo called ranges is removed, instead simply including an correctly formatted ages file will cause the stratigraphic ranges to be included in the plot.
+- Changed default for fix.topology in StratPhyloCongruence to TRUE.
+- Modified calculation for p-values in StratPhyloCongruence to take the arcsine square root of each metric to make data closer to the assumption of a normal distribution.
+- Added Wills-type p-value as column to output from StratPhyloCongruence.
+- Updated help files for StratPhyloCongruence to note the p-value output changes.
+
+Version - 1.3 - 2014-08-08
+- Option added to geoscalePhylo that allows the tree to be plotted vertically using the new argument direction.
+
+Version - 1.2 - 2014-05-12
+- Fixed DatePhylo bug with equal and ruta methods regarding order in which branch-sharing occurs (see timePaleoPhy  function in paleotree for additional
+ 
