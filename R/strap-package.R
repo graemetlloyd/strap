@@ -48,7 +48,7 @@ NULL
 #'
 #' @name Asaphidae
 #' @docType data
-#' @format A list containing 162 trees (\code{$tree}) and a matrix of first and last appearances (\link{$ages}).
+#' @format A list containing 162 trees (\code{$tree}) and a matrix of first and last appearances (\code{$ages}).
 #' @references Bell, M. A. and Braddy, S. J., 2012, Cope’s rule in the Ordovician trilobite Family Asaphidae (Order Asaphida): patterns across multiple most parsimonious trees: \emph{Historical Biology}, \bold{24}, 223-230.
 #' @keywords datasets
 NULL
