@@ -9,6 +9,6 @@
 The stratigraphic ranges for the British stages of the Ordovician.
 }
 \references{
-Webby, B.D., Paris, F., Droser, M.L., and Percival, I.G. (editors), 2004. The Great Ordovician Biodiversity Event. Columbia University Press, New York, 496 pp.
+Webby, B.D., Paris, F., Droser, M.L., and Percival, I.G. (editors), 2004. \emph{The Great Ordovician Biodiversity Event}. Columbia University Press, New York, 496 pp.
 }
 \keyword{datasets}
