@@ -16,6 +16,7 @@ Depends:
 Imports:
     graphics,
     grDevices,
+    pbapply,
     stats,
     utils
 Description: Functions for the stratigraphic analysis of phylogenetic trees.
