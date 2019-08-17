@@ -189,7 +189,7 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   Ntrees <- length(trees)
   
   ### Check that if using Ruta time-scaling method all trees include branch lengthsa nd stop and warn user if not:
-  if(!length(unlist(lapply(trees, function(x) grep("edge.length", names(x))))) == length(trees)) stop("If using \"ruta\" method then all trees must include branch lengths.")
+  if(!length(unlist(lapply(trees, function(x) grep("edge.length", names(x))))) == length(trees) && method == "ruta") stop("If using \"ruta\" method then all trees must include branch lengths.")
 
   ### Make sure permutation numbers are not negative:
   if(samp.perm <= 0 || rand.perm <= 0) stop("Number of permutations must be positive.")
@@ -416,6 +416,11 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   
   input.permutations[, "GERt"] <- unlist(lapply(as.list(input.permutations[, "MIG"]), function(x) {y <- 1 - ((x - min(rand.permutations[, "MIG"])) / (max(rand.permutations[, "MIG"]) - min(rand.permutations[, "MIG"]))); if(y > 1) y <- 1; if(y < 0) y <- 0; y}))
   if(SamplingTrees) samp.permutations[, "GERt"] <- unlist(lapply(as.list(samp.permutations[, "MIG"]), function(x) {y <- 1 - ((x - min(rand.permutations[, "MIG"])) / (max(rand.permutations[, "MIG"]) - min(rand.permutations[, "MIG"]))); if(y > 1) y <- 1; if(y < 0) y <- 0; y}))
+  
+  
+  
+  
+  
   
   ### Estimate p-value for SCI:
   input.permutations[, "est.p.SCI"] <- stats::pnorm(asin(sqrt(input.permutations[, "SCI"])), mean(asin(sqrt(rand.permutations[, "SCI"]))), stats::sd(asin(sqrt(rand.permutations[, "SCI"]))), lower.tail = FALSE)
