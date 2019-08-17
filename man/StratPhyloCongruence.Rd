@@ -149,23 +149,23 @@ fit.to.strat.2 <- StratPhyloCongruence(trees = Dipnoi$tree, ages = Dipnoi$ages, 
 
 }
 \references{
-Bell, M. A. and Lloyd, G. T., 2015. \code{strap}: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence. \italic{Palaeontology}, \bold{58}, 379-389.
+Bell, M. A. and Lloyd, G. T., 2015. \code{strap}: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence. \emph{Palaeontology}, \bold{58}, 379-389.
 
-Benton, M. J. and Storrs, G. W., 1994. Testing the quality of the fossil record: palaeontological knowledge is improving. \italic{Geology}, \bold{22}, 111-114.
+Benton, M. J. and Storrs, G. W., 1994. Testing the quality of the fossil record: palaeontological knowledge is improving. \emph{Geology}, \bold{22}, 111-114.
 
-Boyd, C. A., Cleland, T. P., Marrero, N. L. and Clarke, J. A., 2011. Exploring the effects of phylogenetic uncertainty and consensus trees on stratigraphic consistency scores: a new program and a standardized method. \italic{Cladistics}, \bold{27}, 52-60.
+Boyd, C. A., Cleland, T. P., Marrero, N. L. and Clarke, J. A., 2011. Exploring the effects of phylogenetic uncertainty and consensus trees on stratigraphic consistency scores: a new program and a standardized method. \emph{Cladistics}, \bold{27}, 52-60.
 
-Huelsenbeck, J. P., 1994. Comparing the stratigraphic record to estimates of phylogeny. \italic{Paleobiology}, \bold{20}, 470-483.
+Huelsenbeck, J. P., 1994. Comparing the stratigraphic record to estimates of phylogeny. \emph{Paleobiology}, \bold{20}, 470-483.
 
-Pol, D. and Norell, M. A., 2001. Comments on the Manhattan Stratigraphic Measure. \italic{Cladistics}, \bold{17}, 285-289.
+Pol, D. and Norell, M. A., 2001. Comments on the Manhattan Stratigraphic Measure. \emph{Cladistics}, \bold{17}, 285-289.
 
-Pol, D. and Norell, M. A., 2006. Uncertainty in the age of fossils and the stratigraphic fit to phylogenies. \italic{Systematic Biology}, \bold{55}, 512-521.
+Pol, D. and Norell, M. A., 2006. Uncertainty in the age of fossils and the stratigraphic fit to phylogenies. \emph{Systematic Biology}, \bold{55}, 512-521.
 
-Siddall, M. E., 1998. Stratigraphic fit to phylogenies: a proposed solution. \italic{Cladistics}, \bold{14}, 201-208.
+Siddall, M. E., 1998. Stratigraphic fit to phylogenies: a proposed solution. \emph{Cladistics}, \bold{14}, 201-208.
 
-Wills, M. A., 1999. Congruence between phylogeny and stratigraphy: randomization tests and the Gap Excess Ratio. \italic{Systematic Biology}, \bold{48}, 559-580.
+Wills, M. A., 1999. Congruence between phylogeny and stratigraphy: randomization tests and the Gap Excess Ratio. \emph{Systematic Biology}, \bold{48}, 559-580.
 
-Wills, M. A., Barrett, P. M. and Heathcote, J. F., 2008. The modified Gap Excess Ratio (GER*) and the stratigraphic congruence of dinosaur phylogenies. \italic{Systematic Biology}, \bold{57}, 891-904.
+Wills, M. A., Barrett, P. M. and Heathcote, J. F., 2008. The modified Gap Excess Ratio (GER*) and the stratigraphic congruence of dinosaur phylogenies. \emph{Systematic Biology}, \bold{57}, 891-904.
 }
 \author{
 Mark A. Bell \email{mark.bell521@gmail.com} and Graeme T. Lloyd \email{graemetlloyd@gmail.com}
