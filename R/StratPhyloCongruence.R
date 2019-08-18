@@ -15,6 +15,7 @@
 #' @param fix.topology Whether to allow tree shape to be random (fix.topology = FALSE) or to reflect the tree shape of the input tree(s) (fix.topology = TRUE).
 #' @param fix.outgroup Whether to force the randomly generated trees to share the outgroup of the first input tree (fix.outgroup = TRUE) or not (fix.outgroup = FALSE)
 #' @param outgroup.taxon The outgroup taxon name (only applicable if fix.outgroup = TRUE).
+#' @param calculate.SCI Logical indicating whether or not to calculate the Stratigraphic Consistency Index (default is \code{TRUE}). If this index is not required switiching to \code{FALSE} can significantly improve the speed of the function.
 #'
 #' @details
 #'
@@ -155,7 +156,7 @@
 #'   outgroup.taxon = "Psarolepis_romeri")
 #'
 #' @export StratPhyloCongruence
-StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.perm = 1000, rand.perm = 1000, hard = TRUE, randomly.sample.ages = FALSE, fix.topology = TRUE, fix.outgroup = TRUE, outgroup.taxon = NULL) {
+StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.perm = 1000, rand.perm = 1000, hard = TRUE, randomly.sample.ages = FALSE, fix.topology = TRUE, fix.outgroup = TRUE, outgroup.taxon = NULL, calculate.SCI = TRUE) {
   
   # SRL only matters for taxa with ages so add option to not do double sampling from sample permutation of ages
   # Instead of randomly shuffling tips randomly sample trees from bifurcations of consensus? Could be better at finding similar trees
@@ -164,7 +165,6 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   # More checks of data format
   # CHECK TREES HAVE SAME NUMBER OF TIPS AND SAME NAMES
   # ADD USER INPUT OPTIONS FOR RANDOM TREES SAMPLE?
-  # MAKE SCI OPTIONAL AS SLOWEST PART OF FUNCTION
   # MAKE SRL 1 IF EVER GETS TO ZERO?
   
   # Subfunction to calculate the SCI:
@@ -380,29 +380,34 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
     
   }
   
-  # Report to user current task being performed:
-  cat("Calculating Stratigraphic Consistency Index for input trees...\nUNDERLAY")
-  
-  # Calculate Stratigraphic Consistency Index for every input tree:
-  input.permutations[, "SCI"] <- unlist(pbapply::pblapply(trees, function(x) StratigraphicConsistencyIndex(x, ages)))
-  
-  # Report to user current task being performed:
-  cat("Calculating Stratigraphic Consistency Index for randomly generated trees...\nUNDERLAY")
-  
-  # Calculate Stratigraphic Consistency Index for every random tree:
-  rand.permutations[, "SCI"] <- unlist(pbapply::pblapply(rand.trees, function(x) StratigraphicConsistencyIndex(x, x$ages)))
-  
-  # If sampling trees:
-  if(SamplingTrees) {
+  # If calculating Stratigraphic Consistency Index:
+  if(calculate.SCI) {
     
     # Report to user current task being performed:
-    cat("Calculating Stratigraphic Consistency Index for sampled trees...\nUNDERLAY")
+    cat("Calculating Stratigraphic Consistency Index for input trees...\nUNDERLAY")
     
-    # Calculate Stratigraphic Consistency Index for every sampled tree:
-    samp.permutations[, "SCI"] <- unlist(pbapply::pblapply(samp.trees, function(x) StratigraphicConsistencyIndex(x, x$ages)))
+    # Calculate Stratigraphic Consistency Index for every input tree:
+    input.permutations[, "SCI"] <- unlist(pbapply::pblapply(trees, function(x) StratigraphicConsistencyIndex(x, ages)))
+    
+    # Report to user current task being performed:
+    cat("Calculating Stratigraphic Consistency Index for randomly generated trees...\nUNDERLAY")
+    
+    # Calculate Stratigraphic Consistency Index for every random tree:
+    rand.permutations[, "SCI"] <- unlist(pbapply::pblapply(rand.trees, function(x) StratigraphicConsistencyIndex(x, x$ages)))
+    
+    # If sampling trees:
+    if(SamplingTrees) {
+      
+      # Report to user current task being performed:
+      cat("Calculating Stratigraphic Consistency Index for sampled trees...\nUNDERLAY")
+      
+      # Calculate Stratigraphic Consistency Index for every sampled tree:
+      samp.permutations[, "SCI"] <- unlist(pbapply::pblapply(samp.trees, function(x) StratigraphicConsistencyIndex(x, x$ages)))
+      
+    }
     
   }
-
+  
   # Calculate Simple Range Length for every input tree:
   input.permutations[, "SRL"] <- unlist(lapply(trees, function(x) abs(sum(apply(ages, 1, diff)))))
   
@@ -478,8 +483,8 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   # If sampling trees calculate Gap Excess Ratiot for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GERt"] <- unlist(lapply(as.list(samp.permutations[, "MIG"]), function(x) {y <- 1 - ((x - min(rand.permutations[, "MIG"])) / (max(rand.permutations[, "MIG"]) - min(rand.permutations[, "MIG"]))); if(y > 1) y <- 1; if(y < 0) y <- 0; y}))
   
-  # Estimate p-value for SCI:
-  input.permutations[, "est.p.SCI"] <- stats::pnorm(asin(sqrt(input.permutations[, "SCI"])), mean(asin(sqrt(rand.permutations[, "SCI"]))), stats::sd(asin(sqrt(rand.permutations[, "SCI"]))), lower.tail = FALSE)
+  # If calculating SCI estimate p-value for SCI:
+  if(calculate.SCI) input.permutations[, "est.p.SCI"] <- stats::pnorm(asin(sqrt(input.permutations[, "SCI"])), mean(asin(sqrt(rand.permutations[, "SCI"]))), stats::sd(asin(sqrt(rand.permutations[, "SCI"]))), lower.tail = FALSE)
   
   # Estimate p-value for RCI:
   input.permutations[, "est.p.RCI"] <- stats::pnorm(input.permutations[, "RCI"], mean(rand.permutations[, "RCI"]), stats::sd(rand.permutations[, "RCI"]), lower.tail = FALSE)
@@ -493,8 +498,8 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   # If sampling trees:
   if(SamplingTrees) {
     
-    # Estimate p-value for SCI:
-    samp.permutations[, "est.p.SCI"] <- stats::pnorm(asin(sqrt(samp.permutations[, "SCI"])), mean(asin(sqrt(rand.permutations[, "SCI"]))), stats::sd(asin(sqrt(rand.permutations[, "SCI"]))), lower.tail = FALSE)
+    # If calculating SCI then estimate p-value for SCI:
+    if(calculate.SCI) samp.permutations[, "est.p.SCI"] <- stats::pnorm(asin(sqrt(samp.permutations[, "SCI"])), mean(asin(sqrt(rand.permutations[, "SCI"]))), stats::sd(asin(sqrt(rand.permutations[, "SCI"]))), lower.tail = FALSE)
     
     # Estimate p-value for RCI:
     samp.permutations[, "est.p.RCI"] <- stats::pnorm(samp.permutations[, "RCI"], mean(rand.permutations[, "RCI"]), stats::sd(rand.permutations[, "RCI"]), lower.tail = FALSE)
@@ -518,6 +523,17 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   
   # If sampled trees do not exist set class of each tree variable as multiPhylo:
   if(samp.perm == 0) class(rand.trees) <- class(trees) <- "multiPhylo"
+  
+  # If not calculating SCI:
+  if(!calculate.SCI) {
+    
+    # Remove SCI columns from input permutations:
+    input.permutations <- input.permutations[, -c(which(colnames(input.permutations) == "SCI"), which(colnames(input.permutations) == "est.p.SCI"))]
+    
+    # If sampling trees remove SCI columns from sample permutations:
+    if(SamplingTrees) samp.permutations <- samp.permutations[, -c(which(colnames(samp.permutations) == "SCI"), which(colnames(samp.permutations) == "est.p.SCI"))]
+  
+  }
 
   # Compile output as list:
   output <- list(input.permutations, samp.permutations, rand.permutations, trees, samp.trees, rand.trees)

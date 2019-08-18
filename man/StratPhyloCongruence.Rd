@@ -7,7 +7,7 @@
 StratPhyloCongruence(trees, ages, rlen = 0, method = "basic",
   samp.perm = 1000, rand.perm = 1000, hard = TRUE,
   randomly.sample.ages = FALSE, fix.topology = TRUE,
-  fix.outgroup = TRUE, outgroup.taxon = NULL)
+  fix.outgroup = TRUE, outgroup.taxon = NULL, calculate.SCI = TRUE)
 }
 \arguments{
 \item{trees}{Input tree(s) as either a phylo or multiphylo object.}
@@ -31,6 +31,8 @@ StratPhyloCongruence(trees, ages, rlen = 0, method = "basic",
 \item{fix.outgroup}{Whether to force the randomly generated trees to share the outgroup of the first input tree (fix.outgroup = TRUE) or not (fix.outgroup = FALSE)}
 
 \item{outgroup.taxon}{The outgroup taxon name (only applicable if fix.outgroup = TRUE).}
+
+\item{calculate.SCI}{Logical indicating whether or not to calculate the Stratigraphic Consistency Index (default is \code{TRUE}). If this index is not required switiching to \code{FALSE} can significantly improve the speed of the function.}
 }
 \value{
 \item{input.tree.results}{A matrix with a row for each input tree and columns indicating the values for SCI, RCI, GER and MSM* and their estimated probabilities assuming a normal distribution (est.p.SCI, est.p.RCI, est.p.GER, and est.p.MSM*) as well as GERt, GER*, MIG, and p.Wills (their probability as position within the MIGs of the random topologies).}
