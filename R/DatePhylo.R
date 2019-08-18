@@ -49,6 +49,12 @@
 #'
 #' @export DatePhylo
 DatePhylo <- function(tree, ages, rlen = 0, method = "basic", add.terminal = FALSE) {
+  
+  tree = rtree(10000)
+  ages = matrix(as.vector(t(apply(matrix(runif(20000, 65, 140), ncol = 2), 1, sort, decreasing = TRUE))), byrow = TRUE, ncol = 2, dimnames = list(tree$tip.label, c("FAD", "LAD")))
+  rlen = 0
+  method = "basic"
+  add.terminal = FALSE
 
   # Stop if using Ruta method but not supplying a tree with branch lengths:
   if(is.null(tree$edge.length) && method == "ruta") stop("Tree has no branch lengths (required for Ruta method).")
@@ -77,12 +83,9 @@ DatePhylo <- function(tree, ages, rlen = 0, method = "basic", add.terminal = FAL
   # Get node numbers to start:
   nodes <- c(ape::Ntip(tree) + 1):(ape::Nnode(tree) + ape::Ntip(tree))
   
-  # Create vector for node ages:
-  node.ages <- nodes
-  
   # Get starting node ages:
-  for(i in 1:length(nodes)) node.ages[i] <- max(ages[tree$tip.label[FindDescendants(nodes[i], tree)], "FAD"])
-  
+  node.ages <- unlist(lapply(as.list(nodes), function(x) max(ages[tree$tip.label[FindDescendants(n = x, tree = tree)], "FAD"])))
+
   # Get all ages (tips and nodes):
   all.ages <- as.vector(c(ages[tree$tip.label, "FAD"], node.ages))
   
