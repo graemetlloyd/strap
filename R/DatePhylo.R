@@ -50,12 +50,6 @@
 #' @export DatePhylo
 DatePhylo <- function(tree, ages, rlen = 0, method = "basic", add.terminal = FALSE) {
   
-  tree = rtree(10000)
-  ages = matrix(as.vector(t(apply(matrix(runif(20000, 65, 140), ncol = 2), 1, sort, decreasing = TRUE))), byrow = TRUE, ncol = 2, dimnames = list(tree$tip.label, c("FAD", "LAD")))
-  rlen = 0
-  method = "basic"
-  add.terminal = FALSE
-
   # Stop if using Ruta method but not supplying a tree with branch lengths:
   if(is.null(tree$edge.length) && method == "ruta") stop("Tree has no branch lengths (required for Ruta method).")
 
