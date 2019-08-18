@@ -528,10 +528,13 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   if(!calculate.SCI) {
     
     # Remove SCI columns from input permutations:
-    input.permutations <- input.permutations[, -c(which(colnames(input.permutations) == "SCI"), which(colnames(input.permutations) == "est.p.SCI"))]
+    input.permutations <- input.permutations[, -c(which(colnames(input.permutations) == "SCI"), which(colnames(input.permutations) == "est.p.SCI")), drop = FALSE]
+    
+    # Remove SCI columns from random permutations:
+    input.permutations <- input.permutations[, -which(colnames(rand.permutations) == "SCI"), drop = FALSE]
     
     # If sampling trees remove SCI columns from sample permutations:
-    if(SamplingTrees) samp.permutations <- samp.permutations[, -c(which(colnames(samp.permutations) == "SCI"), which(colnames(samp.permutations) == "est.p.SCI"))]
+    if(SamplingTrees) samp.permutations <- samp.permutations[, -c(which(colnames(samp.permutations) == "SCI"), which(colnames(samp.permutations) == "est.p.SCI")), drop = FALSE]
   
   }
 
