@@ -167,365 +167,365 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   # MAKE SCI OPTIONAL AS SLOWEST PART OF FUNCTION
   # MAKE SRL 1 IF EVER GETS TO ZERO?
   
-  ### Subfunction to calculate the SCI:
+  # Subfunction to calculate the SCI:
   StratigraphicConsistencyIndex <- function(tree, ages) {
     
-    ### Build vector of internal node numbers excluding the root:
+    # Build vector of internal node numbers excluding the root:
     NodeNumbers <- (Ntip(tree) + 2):(Ntip(tree) + tree$Nnode)
     
-    ### Count consistent nodes:
+    # Count consistent nodes:
     ConsistentNodeCount <- sum(unlist(lapply(NodeNumbers, function(x) {CurrentNodeDescendants <- tree$tip.label[FindDescendants(x, tree)]; PreviousNodeDescendants <- setdiff(tree$tip.label[FindDescendants(tree$edge[tree$edge[, 2] == x, 1], tree)], CurrentNodeDescendants); max(ages[CurrentNodeDescendants, "FAD"]) >= max(ages[PreviousNodeDescendants, "FAD"])})))
     
-    ### Return SCI:
+    # Return SCI:
     return(ConsistentNodeCount / (tree$Nnode - 1))
     
   }
   
-  ### If a single tree convert to list to ensure a standard format for input tree(s):
+  # If a single tree convert to list to ensure a standard format for input tree(s):
   if(class(trees) == "phylo") trees <- list(trees)
   
-  ### Strip names off trees:
+  # Strip names off trees:
   names(trees) <- NULL
   
-  ### Get total number of input trees:
+  # Get total number of input trees:
   Ntrees <- length(trees)
   
-  ### Check that if using Ruta time-scaling method all trees include branch lengthsa nd stop and warn user if not:
+  # Check that if using Ruta time-scaling method all trees include branch lengthsa nd stop and warn user if not:
   if(!length(unlist(lapply(trees, function(x) grep("edge.length", names(x))))) == length(trees) && method == "ruta") stop("If using \"ruta\" method then all trees must include branch lengths.")
 
-  ### Make sure permutation numbers are not negative:
+  # Make sure permutation numbers are not negative:
   if(samp.perm <= 0 || rand.perm <= 0) stop("Number of permutations must be positive.")
   
-  ### Check that if fixing outgroup that an outgroup taxon is specified and stop and warn user if not:
+  # Check that if fixing outgroup that an outgroup taxon is specified and stop and warn user if not:
   if(fix.outgroup && is.null(outgroup.taxon)) stop("If using fix.outgroup = TRUE must specify an outgroup.taxon.")
   
-  ### If outgroup taxon is being used check it is found in all trees and stop and warn user if not:
+  # If outgroup taxon is being used check it is found in all trees and stop and warn user if not:
   if(!is.null(outgroup.taxon)) if(!all(unlist(lapply(trees, function(x) length(intersect(outgroup.taxon, x$tip.label)))) == 1)) stop("outgroup.taxon must appear exactly once in all trees.")
   
-  ### Set null variables that may not be used later but are still included in the output:
+  # Set null variables that may not be used later but are still included in the output:
   samp.permutations <- samp.trees <- NULL
   
-  ### If sampling tree set SamplingTrees to TRUE else set to FALSE:
+  # If sampling tree set SamplingTrees to TRUE else set to FALSE:
   SamplingTrees <- ifelse(hard == FALSE || randomly.sample.ages == TRUE, TRUE, FALSE)
   
-  ### Create matrix to store output with extra column for GERt:
+  # Create matrix to store output with extra column for GERt:
   input.permutations <- matrix(ncol = 15, nrow = length(trees), dimnames = list(paste("tree_", c(1:length(trees)), sep = ""), c("SRL", "MIG", "GMax", "GMin", "SCI", "RCI", "GER", "MSM*", "est.p.SCI", "est.p.RCI", "est.p.GER", "est.p.MSM*", "GER*", "GERt", "p.Wills")))
   
-  ### Create matrix to store random permutation results:
+  # Create matrix to store random permutation results:
   rand.permutations <- matrix(nrow = rand.perm, ncol = 8, dimnames = list(c(), c("SRL", "MIG", "GMax", "GMin", "SCI", "RCI", "GER", "MSM*")))
   
-  ### If sampling trees create matrix to store permutation results with extra column for GERt::
+  # If sampling trees create matrix to store permutation results with extra column for GERt::
   if(SamplingTrees) samp.permutations <- matrix(nrow = samp.perm, ncol = 15, dimnames = list(c(), c("SRL", "MIG", "GMax", "GMin", "SCI", "RCI", "GER", "MSM*", "est.p.SCI", "est.p.RCI", "est.p.GER", "est.p.MSM*", "GER*", "GERt", "p.Wills")))
   
-  ### Calculate sum of stratigraphic ranges of taxa (SRL):
+  # Calculate sum of stratigraphic ranges of taxa (SRL):
   SRL <- sum(ages[, "FAD"] - ages[, "LAD"])
   
-  ### If sum of stratigraphic ranges is zero (all FADs are equal to their LADs):
+  # If sum of stratigraphic ranges is zero (all FADs are equal to their LADs):
   if(SRL == 0) {
   
-    ### If user has requested random sampling of ages method:
+    # If user has requested random sampling of ages method:
     if(randomly.sample.ages == TRUE) {
     
-      ### Warn user:
+      # Warn user:
       cat("Can not perform random sampling of ages method as sum of stratigraphic ranges is zero.\nFor RCI sum of stratigraphic ranges is set to one.\n\n")
       
-      ### Set randomly sampled ages as false:
+      # Set randomly sampled ages as false:
       randomly.sample.ages <- FALSE
       
-    ### If randomly sampled ages is set to false:
+    # If randomly sampled ages is set to false:
     } else {
 
-      ### Warn user:
+      # Warn user:
       cat("Sum of stratigraphic ranges is set to one (to avoid dividing by zero).\n\n")
     
     }
     
-    ### Set SRL as one:
+    # Set SRL as one:
     SRL <- 1
     
   }
   
-  ### If user wants to fix the topology as in GERt:
+  # If user wants to fix the topology as in GERt:
   if(fix.topology) {
     
-    ### Create random trees by resampling input trees:
+    # Create random trees by resampling input trees:
     rand.trees <- trees[sample(1:length(trees), rand.perm, replace = TRUE)]
     
-    ### If not using hard = TRUE then make sure trees are all fully bifurcating:
+    # If not using hard = TRUE then make sure trees are all fully bifurcating:
     if(!hard) rand.trees <- lapply(rand.trees, multi2di)
     
-    ### If fixing the outgroup taxon:
+    # If fixing the outgroup taxon:
     if(fix.outgroup) {
       
-      ### Shuffle all tip labels except the outgroup taxon:
+      # Shuffle all tip labels except the outgroup taxon:
       rand.trees <- lapply(rand.trees, function(x) {x$tip.label[-(x$tip.label == outgroup.taxon)] <- sample(x$tip.label[-(x$tip.label == outgroup.taxon)]); x})
       
-    ### If not fixing the outgroup taxon:
+    # If not fixing the outgroup taxon:
     } else {
       
-      ### Shuffle all tip labels including the outgroup taxon:
+      # Shuffle all tip labels including the outgroup taxon:
       lapply(rand.trees, function(x) {x$tip.label <- sample(x$tip.label); x})
     
     }
     
-    ### If using Ruta method will need branch lengths adding to random trees:
+    # If using Ruta method will need branch lengths adding to random trees:
     if(method == "ruta") {
       
-      ### Build vector of edge lengths from input trees to sample from for random trees:
+      # Build vector of edge lengths from input trees to sample from for random trees:
       EdgeLengthsToSampleFrom <- unlist(lapply(trees, function(x) x$edge.length))
       
-      ### Assign edge lengths to random trees by randomly sampling from sampled tree edge lengths:
+      # Assign edge lengths to random trees by randomly sampling from sampled tree edge lengths:
       rand.trees <- lapply(rand.trees, function(x) {x$edge.length <- sample(EdgeLengthsToSampleFrom, nrow(x$edge), replace = TRUE); x})
       
     }
     
-  ### If user does not want to fix the topology:
+  # If user does not want to fix the topology:
   } else {
   
-    ### Make random trees for permutations:
+    # Make random trees for permutations:
     rand.trees <- rmtree(rand.perm, Ntip(trees[[1]]))
     
-    ### Add real tip names as randomly shuffled values:
+    # Add real tip names as randomly shuffled values:
     rand.trees <- lapply(rand.trees, function(x) {x$tip.label <- sample(trees[[1]]$tip.label); x})
     
-    ### If fixing outgroup then reroot random trees on outgroup:
+    # If fixing outgroup then reroot random trees on outgroup:
     if(fix.outgroup) rand.trees <- lapply(rand.trees, function(x) root(x, outgroup.taxon))
   
   }
   
-  ### If using the sample permutation loop:
+  # If using the sample permutation loop:
   if(SamplingTrees) {
     
-    ### If polytomies are to be considered hard:
+    # If polytomies are to be considered hard:
     if(hard == TRUE) {
       
-      ### Store randomly sampled tree:
+      # Store randomly sampled tree:
       samp.trees <- trees[sample(1:Ntrees, size = samp.perm, replace = TRUE)]
       
-    ### If polytomies are to be considered soft:
+    # If polytomies are to be considered soft:
     } else {
       
-      ### Store randomly sampled randomly bifurcated tree:
+      # Store randomly sampled randomly bifurcated tree:
       samp.trees <- lapply(trees[sample(1:Ntrees, size = samp.perm, replace = TRUE)], function(x) ape::multi2di(x))
       
     }
     
-  ### If not permuting ages of polytomie resolutions:
+  # If not permuting ages of polytomie resolutions:
   } else {
     
-    ### Reset samp.perm to zero (for correct counter values later):
+    # Reset samp.perm to zero (for correct counter values later):
     samp.perm <- 0
     
   }
   
-  ### If randomly sampling ages:
+  # If randomly sampling ages:
   if(randomly.sample.ages) {
     
-    ### Build individual ages matrix for each tree by randomly sampling twice between FAD and LAD:
+    # Build individual ages matrix for each tree by randomly sampling twice between FAD and LAD:
     rand.trees <- lapply(rand.trees, function(x) {x$ages <- t(apply(ages, 1, function(y) sort(stats::runif(2, max = y[1], min = y[2]), decreasing  = TRUE))); colnames(x$ages) <- c("FAD", "LAD"); x})
     
-    ### Build individual ages matrix for each tree by randomly sampling once between FAD and LAD:
+    # Build individual ages matrix for each tree by randomly sampling once between FAD and LAD:
     #rand.trees <- lapply(rand.trees, function(x) {x$ages <- t(apply(ages, 1, function(y) rep(stats::runif(1, max = y[1], min = y[2]), 2))); colnames(x$ages) <- c("FAD", "LAD"); x})
     
-  ### If not randomly sampling ages:
+  # If not randomly sampling ages:
   } else {
     
-    ### Build individual ages matrix for each tree by copying across ages matrix:
+    # Build individual ages matrix for each tree by copying across ages matrix:
     rand.trees <- lapply(rand.trees, function(x) {x$ages <- ages; x})
     
   }
   
-  ### If sampling trees:
+  # If sampling trees:
   if(SamplingTrees) {
     
-    ### If randomly sampling ages:
+    # If randomly sampling ages:
     if(randomly.sample.ages) {
       
-      ### Build individual ages matrix for each tree by randomly sampling twice between FAD and LAD:
+      # Build individual ages matrix for each tree by randomly sampling twice between FAD and LAD:
       samp.trees <- lapply(samp.trees, function(x) {x$ages <- t(apply(ages, 1, function(y) sort(stats::runif(2, max = y[1], min = y[2]), decreasing  = TRUE))); colnames(x$ages) <- c("FAD", "LAD"); x})
       
-      ### Build individual ages matrix for each tree by randomly sampling once between FAD and LAD:
+      # Build individual ages matrix for each tree by randomly sampling once between FAD and LAD:
       #samp.trees <- lapply(samp.trees, function(x) {x$ages <- t(apply(ages, 1, function(y) rep(stats::runif(1, max = y[1], min = y[2]), 2))); colnames(x$ages) <- c("FAD", "LAD"); x})
       
-    ### If not randomly sampling ages:
+    # If not randomly sampling ages:
     } else {
       
-      ### Build individual ages matrix for each tree by copying across ages matrix:
+      # Build individual ages matrix for each tree by copying across ages matrix:
       samp.trees <- lapply(samp.trees, function(x) {x$ages <- ages; x})
       
     }
     
   }
   
-  ### Report to user current task being performed:
+  # Report to user current task being performed:
   cat("Time-scaling input trees...\nUNDERLAY")
   
-  ### Date every input tree using the date phylo options given:
+  # Date every input tree using the date phylo options given:
   trees <- pbapply::pblapply(trees, function(x) DatePhylo(tree = x, ages = ages, rlen = rlen, method = method, add.terminal = FALSE))
   
-  ### Report to user current task being performed:
+  # Report to user current task being performed:
   cat("Time-scaling randomly generated trees...\nUNDERLAY")
   
-  ### Date every random tree using the date phylo options given:
+  # Date every random tree using the date phylo options given:
   rand.trees <- pbapply::pblapply(rand.trees, function(x) DatePhylo(tree = x, ages = x$ages, rlen = rlen, method = method, add.terminal = FALSE))
   
-  ### If sampling trees:
+  # If sampling trees:
   if(SamplingTrees) {
     
-    ### Report to user current task being performed:
+    # Report to user current task being performed:
     cat("Time-scaling randomly sampled trees...\nUNDERLAY")
     
-    ### Date every sampled tree using the date phylo options given:
+    # Date every sampled tree using the date phylo options given:
     samp.trees <- pbapply::pblapply(samp.trees, function(x) DatePhylo(tree = x, ages = x$ages, rlen = rlen, method = method, add.terminal = FALSE))
     
   }
   
-  ### Report to user current task being performed:
+  # Report to user current task being performed:
   cat("Calculating Stratigraphic Consistency Index for input trees...\nUNDERLAY")
   
-  ### Calculate Stratigraphic Consistency Index for every input tree:
+  # Calculate Stratigraphic Consistency Index for every input tree:
   input.permutations[, "SCI"] <- unlist(pbapply::pblapply(trees, function(x) StratigraphicConsistencyIndex(x, ages)))
   
-  ### Report to user current task being performed:
+  # Report to user current task being performed:
   cat("Calculating Stratigraphic Consistency Index for randomly generated trees...\nUNDERLAY")
   
-  ### Calculate Stratigraphic Consistency Index for every random tree:
+  # Calculate Stratigraphic Consistency Index for every random tree:
   rand.permutations[, "SCI"] <- unlist(pbapply::pblapply(rand.trees, function(x) StratigraphicConsistencyIndex(x, x$ages)))
   
-  ### If sampling trees:
+  # If sampling trees:
   if(SamplingTrees) {
     
-    ### Report to user current task being performed:
+    # Report to user current task being performed:
     cat("Calculating Stratigraphic Consistency Index for sampled trees...\nUNDERLAY")
     
-    ### Calculate Stratigraphic Consistency Index for every sampled tree:
+    # Calculate Stratigraphic Consistency Index for every sampled tree:
     samp.permutations[, "SCI"] <- unlist(pbapply::pblapply(samp.trees, function(x) StratigraphicConsistencyIndex(x, x$ages)))
     
   }
 
-  ### Calculate Simple Range Length for every input tree:
+  # Calculate Simple Range Length for every input tree:
   input.permutations[, "SRL"] <- unlist(lapply(trees, function(x) abs(sum(apply(ages, 1, diff)))))
   
-  ### Calculate Simple Range Length for every random tree:
+  # Calculate Simple Range Length for every random tree:
   rand.permutations[, "SRL"] <- unlist(lapply(rand.trees, function(x) abs(sum(apply(x$ages, 1, diff)))))
   
-  ### If sampling trees calculate Simple Range Length for every sampled tree:
+  # If sampling trees calculate Simple Range Length for every sampled tree:
   if(SamplingTrees) samp.permutations[, "SRL"] <- unlist(lapply(samp.trees, function(x) abs(sum(apply(x$ages, 1, diff)))))
   
-  ### Calculate Minimum Implied Gap for every input tree:
+  # Calculate Minimum Implied Gap for every input tree:
   input.permutations[, "MIG"] <- unlist(lapply(trees, function(x) sum(x$edge.length)))
   
-  ### Calculate Minimum Implied Gap for every random tree:
+  # Calculate Minimum Implied Gap for every random tree:
   rand.permutations[, "MIG"] <- unlist(lapply(rand.trees, function(x) sum(x$edge.length)))
   
-  ### If sampling trees then calculate Minimum Implied Gap for every input tree:
+  # If sampling trees then calculate Minimum Implied Gap for every input tree:
   if(SamplingTrees) samp.permutations[, "MIG"] <- unlist(lapply(samp.trees, function(x) sum(x$edge.length)))
   
-  ### Calculate GMax for every input tree:
+  # Calculate GMax for every input tree:
   input.permutations[, "GMax"] <- unlist(lapply(trees, function(x) sum(x$root.time - ages[, "FAD"])))
   
-  ### Calculate GMax for every random tree:
+  # Calculate GMax for every random tree:
   rand.permutations[, "GMax"] <- unlist(lapply(rand.trees, function(x) sum(x$root.time - x$ages[, "FAD"])))
   
-  ### If sampling trees calculate GMax for every sampled tree:
+  # If sampling trees calculate GMax for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GMax"] <- unlist(lapply(samp.trees, function(x) sum(x$root.time - x$ages[, "FAD"])))
   
-  ### Calculate GMin for every input tree:
+  # Calculate GMin for every input tree:
   input.permutations[, "GMin"] <- unlist(lapply(trees, function(x) (x$root.time - max(ages[, "FAD"])) + diff(range(ages[, "FAD"]))))
   
-  ### Calculate GMin for every random tree:
+  # Calculate GMin for every random tree:
   rand.permutations[, "GMin"] <- unlist(lapply(rand.trees, function(x) (x$root.time - max(x$ages[, "FAD"])) + diff(range(x$ages[, "FAD"]))))
   
-  ### If sampling trees calculate GMin for every sampled tree:
+  # If sampling trees calculate GMin for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GMin"] <- unlist(lapply(samp.trees, function(x) (x$root.time - max(x$ages[, "FAD"])) + diff(range(x$ages[, "FAD"]))))
   
-  ### Calculate Relative Completeness Index for every input tree:
+  # Calculate Relative Completeness Index for every input tree:
   input.permutations[, "RCI"] <- (1 - (input.permutations[, "MIG"] / input.permutations[, "SRL"])) * 100
   
-  ### Calculate Relative Completeness Index for every random tree:
+  # Calculate Relative Completeness Index for every random tree:
   rand.permutations[, "RCI"] <- (1 - (rand.permutations[, "MIG"] / rand.permutations[, "SRL"])) * 100
   
-  ### If sampling trees calculate Relative Completeness Index for every sampled tree:
+  # If sampling trees calculate Relative Completeness Index for every sampled tree:
   if(SamplingTrees) samp.permutations[, "RCI"] <- (1 - (samp.permutations[, "MIG"] / samp.permutations[, "SRL"])) * 100
   
-  ### Calculate Gap Excess Ratio for every input tree:
+  # Calculate Gap Excess Ratio for every input tree:
   input.permutations[, "GER"] <- 1 - ((input.permutations[, "MIG"] - input.permutations[, "GMin"]) / (input.permutations[, "GMax"] - input.permutations[, "GMin"]))
   
-  ### Calculate Gap Excess Ratio for every random tree:
+  # Calculate Gap Excess Ratio for every random tree:
   rand.permutations[, "GER"] <- 1 - ((rand.permutations[, "MIG"] - rand.permutations[, "GMin"]) / (rand.permutations[, "GMax"] - rand.permutations[, "GMin"]))
   
-  ### If sampling trees calculate Gap Excess Ratio for every sampled tree:
+  # If sampling trees calculate Gap Excess Ratio for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GER"] <- 1 - ((samp.permutations[, "MIG"] - samp.permutations[, "GMin"]) / (samp.permutations[, "GMax"] - samp.permutations[, "GMin"]))
   
-  ### Calculate Manhattan Stratigraphic Measure* for every input tree:
+  # Calculate Manhattan Stratigraphic Measure* for every input tree:
   input.permutations[, "MSM*"] <- input.permutations[, "GMin"] / input.permutations[, "MIG"]
   
-  ### Calculate Manhattan Stratigraphic Measure* for every random tree:
+  # Calculate Manhattan Stratigraphic Measure* for every random tree:
   rand.permutations[, "MSM*"] <- rand.permutations[, "GMin"] / rand.permutations[, "MIG"]
   
-  ### If sampling trees calculate Manhattan Stratigraphic Measure* for every sampled tree:
+  # If sampling trees calculate Manhattan Stratigraphic Measure* for every sampled tree:
   if(SamplingTrees) samp.permutations[, "MSM*"] <- samp.permutations[, "GMin"] / samp.permutations[, "MIG"]
   
-  ### Calculate Gap Excess Ratio* for every input tree:
+  # Calculate Gap Excess Ratio* for every input tree:
   input.permutations[, "GER*"] <- unlist(lapply(as.list(input.permutations[, "MIG"]), function(x) sum(x <= rand.permutations[, "MIG"]) / rand.perm))
   
-  ### If sampling trees calculate Gap Excess Ratio* for every sampled tree:
+  # If sampling trees calculate Gap Excess Ratio* for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GER*"] <- unlist(lapply(as.list(samp.permutations[, "MIG"]), function(x) sum(x <= rand.permutations[, "MIG"]) / rand.perm))
   
-  ### Calculate Gap Excess Ratiot for every input tree:
+  # Calculate Gap Excess Ratiot for every input tree:
   input.permutations[, "GERt"] <- unlist(lapply(as.list(input.permutations[, "MIG"]), function(x) {y <- 1 - ((x - min(rand.permutations[, "MIG"])) / (max(rand.permutations[, "MIG"]) - min(rand.permutations[, "MIG"]))); if(y > 1) y <- 1; if(y < 0) y <- 0; y}))
   
-  ### If sampling trees calculate Gap Excess Ratiot for every sampled tree:
+  # If sampling trees calculate Gap Excess Ratiot for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GERt"] <- unlist(lapply(as.list(samp.permutations[, "MIG"]), function(x) {y <- 1 - ((x - min(rand.permutations[, "MIG"])) / (max(rand.permutations[, "MIG"]) - min(rand.permutations[, "MIG"]))); if(y > 1) y <- 1; if(y < 0) y <- 0; y}))
   
-  ### Estimate p-value for SCI:
+  # Estimate p-value for SCI:
   input.permutations[, "est.p.SCI"] <- stats::pnorm(asin(sqrt(input.permutations[, "SCI"])), mean(asin(sqrt(rand.permutations[, "SCI"]))), stats::sd(asin(sqrt(rand.permutations[, "SCI"]))), lower.tail = FALSE)
   
-  ### Estimate p-value for RCI:
+  # Estimate p-value for RCI:
   input.permutations[, "est.p.RCI"] <- stats::pnorm(input.permutations[, "RCI"], mean(rand.permutations[, "RCI"]), stats::sd(rand.permutations[, "RCI"]), lower.tail = FALSE)
   
-  ### Estimate p-value for GER:
+  # Estimate p-value for GER:
   input.permutations[, "est.p.GER"] <- stats::pnorm(asin(sqrt(input.permutations[, "GER"])), mean(asin(sqrt(rand.permutations[, "GER"]))), stats::sd(asin(sqrt(rand.permutations[, "GER"]))), lower.tail = FALSE)
   
-  ### Estimate p-value for MSM*:
+  # Estimate p-value for MSM*:
   input.permutations[, "est.p.MSM*"] <- stats::pnorm(asin(sqrt(input.permutations[, "MSM*"])), mean(asin(sqrt(rand.permutations[, "MSM*"]))), stats::sd(asin(sqrt(rand.permutations[, "MSM*"]))), lower.tail = FALSE)
   
-  ### If sampling trees:
+  # If sampling trees:
   if(SamplingTrees) {
     
-    ### Estimate p-value for SCI:
+    # Estimate p-value for SCI:
     samp.permutations[, "est.p.SCI"] <- stats::pnorm(asin(sqrt(samp.permutations[, "SCI"])), mean(asin(sqrt(rand.permutations[, "SCI"]))), stats::sd(asin(sqrt(rand.permutations[, "SCI"]))), lower.tail = FALSE)
     
-    ### Estimate p-value for RCI:
+    # Estimate p-value for RCI:
     samp.permutations[, "est.p.RCI"] <- stats::pnorm(samp.permutations[, "RCI"], mean(rand.permutations[, "RCI"]), stats::sd(rand.permutations[, "RCI"]), lower.tail = FALSE)
     
-    ### Estimate p-value for GER:
+    # Estimate p-value for GER:
     samp.permutations[, "est.p.GER"] <- stats::pnorm(asin(sqrt(samp.permutations[, "GER"])), mean(asin(sqrt(rand.permutations[, "GER"]))), stats::sd(asin(sqrt(rand.permutations[, "GER"]))), lower.tail = FALSE)
     
-    ### Estimate p-value for MSM*:
+    # Estimate p-value for MSM*:
     samp.permutations[, "est.p.MSM*"] <- stats::pnorm(asin(sqrt(samp.permutations[, "MSM*"])), mean(asin(sqrt(rand.permutations[, "MSM*"]))), stats::sd(asin(sqrt(rand.permutations[, "MSM*"]))), lower.tail = FALSE)
     
   }
   
-  ### Calculate Wills p-value for MIG:
+  # Calculate Wills p-value for MIG:
   input.permutations[, "p.Wills"] <- unlist(lapply(as.list(input.permutations[, "MIG"]), function(x) 1 - (sum(x < rand.permutations[, "MIG"]) / rand.perm)))
   
-  ### If sampling trees calculate Wills p-value for MIG:
+  # If sampling trees calculate Wills p-value for MIG:
   if(SamplingTrees) samp.permutations[, "p.Wills"] <- unlist(lapply(as.list(samp.permutations[, "MIG"]), function(x) 1 - (sum(x < rand.permutations[, "MIG"]) / rand.perm)))
   
-  ### If sampled trees exist set class of each tree variable as multiPhylo:
+  # If sampled trees exist set class of each tree variable as multiPhylo:
   if(samp.perm > 0) class(rand.trees) <- class(samp.trees) <- class(trees) <- "multiPhylo"
   
-  ### If sampled trees do not exist set class of each tree variable as multiPhylo:
+  # If sampled trees do not exist set class of each tree variable as multiPhylo:
   if(samp.perm == 0) class(rand.trees) <- class(trees) <- "multiPhylo"
 
-  ### Compile output as list:
+  # Compile output as list:
   output <- list(input.permutations, samp.permutations, rand.permutations, trees, samp.trees, rand.trees)
 
-  ### Add names to output:
+  # Add names to output:
   names(output) <- c("input.tree.results", "samp.permutation.results", "rand.permutations", "input.trees", "samp.trees", "rand.trees")
 
-  ### Return output:
+  # Return output:
   return(invisible(output))
 
 }
