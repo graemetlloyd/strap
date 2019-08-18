@@ -2,6 +2,7 @@ Version - 1.5 - 2019-08-17
 
 - Restructured package to work with the devtools package (changes invisible to user but makes package easier to update).
 - Complete structural overhaul of StratPhyloCongruence function to improve speed.
+- Minor speed up to DatePhylo.
 
 Version - 1.4 - 2014-10-31
 
