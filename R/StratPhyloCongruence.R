@@ -169,6 +169,8 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   #        trees given constraints of N tips, fix topology etc.)
   # - Make sure SRL makes sense in all cases (i.e., reset SRL to 1 if ever is zero and warn user if the case).
   # - Enable additional option for SRL to only draw a single age between tips (commented out code present to do this slready).
+  # - Add means of partitioning input trees as this is a logical way to actually use the function.
+  #     1. If doing this may also want to number sampled trees to show which these correspond to.
   
   # Subfunction to calculate the SCI:
   StratigraphicConsistencyIndex <- function(tree, ages) {
