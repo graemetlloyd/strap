@@ -164,6 +164,8 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   # More checks of data format
   # CHECK TREES HAVE SAME NUMBER OF TIPS AND SAME NAMES
   # ADD USER INPUT OPTIONS FOR RANDOM TREES SAMPLE?
+  # MAKE SCI OPTIONAL AS SLOWEST PART OF FUNCTION
+  # MAKE SRL 1 IF EVER GETS TO ZERO?
   
   ### Subfunction to calculate the SCI:
   StratigraphicConsistencyIndex <- function(tree, ages) {
@@ -355,72 +357,126 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
     
   }
   
-  
-  
-  # THIS IS THE SLOW BIT SURELY? CONSIDER ADDING THIS TO THE PROGRESS BAR OR DO ALL TIME-SCALING AT SAME TIME ACROSS ALL TREES?
-  ### Date every input tree using the date phylo options given:
+  ### Report to user current task being performed:
   cat("Time-scaling input trees...\nUNDERLAY")
+  
+  ### Date every input tree using the date phylo options given:
   trees <- pbapply::pblapply(trees, function(x) DatePhylo(tree = x, ages = ages, rlen = rlen, method = method, add.terminal = FALSE))
   
+  ### Report to user current task being performed:
   cat("Time-scaling randomly generated trees...\nUNDERLAY")
+  
+  ### Date every random tree using the date phylo options given:
   rand.trees <- pbapply::pblapply(rand.trees, function(x) DatePhylo(tree = x, ages = x$ages, rlen = rlen, method = method, add.terminal = FALSE))
   
+  ### If sampling trees:
   if(SamplingTrees) {
+    
+    ### Report to user current task being performed:
     cat("Time-scaling randomly sampled trees...\nUNDERLAY")
+    
+    ### Date every sampled tree using the date phylo options given:
     samp.trees <- pbapply::pblapply(samp.trees, function(x) DatePhylo(tree = x, ages = x$ages, rlen = rlen, method = method, add.terminal = FALSE))
+    
   }
   
+  ### Report to user current task being performed:
   cat("Calculating Stratigraphic Consistency Index for input trees...\nUNDERLAY")
+  
+  ### Calculate Stratigraphic Consistency Index for every input tree:
   input.permutations[, "SCI"] <- unlist(pbapply::pblapply(trees, function(x) StratigraphicConsistencyIndex(x, ages)))
   
+  ### Report to user current task being performed:
   cat("Calculating Stratigraphic Consistency Index for randomly generated trees...\nUNDERLAY")
+  
+  ### Calculate Stratigraphic Consistency Index for every random tree:
   rand.permutations[, "SCI"] <- unlist(pbapply::pblapply(rand.trees, function(x) StratigraphicConsistencyIndex(x, x$ages)))
   
+  ### If sampling trees:
   if(SamplingTrees) {
+    
+    ### Report to user current task being performed:
     cat("Calculating Stratigraphic Consistency Index for sampled trees...\nUNDERLAY")
+    
+    ### Calculate Stratigraphic Consistency Index for every sampled tree:
     samp.permutations[, "SCI"] <- unlist(pbapply::pblapply(samp.trees, function(x) StratigraphicConsistencyIndex(x, x$ages)))
+    
   }
-  
-  # FASTER SUMMARY STUFF TO BLOCK OUT SEPARATELY?
-  ###
-  input.permutations[, "SRL"] <- unlist(lapply(trees, function(x) abs(sum(apply(ages, 1, diff)))))
-  rand.permutations[, "SRL"] <- unlist(lapply(rand.trees, function(x) abs(sum(apply(x$ages, 1, diff)))))
-  if(SamplingTrees) samp.permutations[, "SRL"] <- unlist(lapply(samp.trees, function(x) abs(sum(apply(x$ages, 1, diff)))))
 
+  ### Calculate Simple Range Length for every input tree:
+  input.permutations[, "SRL"] <- unlist(lapply(trees, function(x) abs(sum(apply(ages, 1, diff)))))
+  
+  ### Calculate Simple Range Length for every random tree:
+  rand.permutations[, "SRL"] <- unlist(lapply(rand.trees, function(x) abs(sum(apply(x$ages, 1, diff)))))
+  
+  ### If sampling trees calculate Simple Range Length for every sampled tree:
+  if(SamplingTrees) samp.permutations[, "SRL"] <- unlist(lapply(samp.trees, function(x) abs(sum(apply(x$ages, 1, diff)))))
+  
+  ### Calculate Minimum Implied Gap for every input tree:
   input.permutations[, "MIG"] <- unlist(lapply(trees, function(x) sum(x$edge.length)))
+  
+  ### Calculate Minimum Implied Gap for every random tree:
   rand.permutations[, "MIG"] <- unlist(lapply(rand.trees, function(x) sum(x$edge.length)))
+  
+  ### If sampling trees then calculate Minimum Implied Gap for every input tree:
   if(SamplingTrees) samp.permutations[, "MIG"] <- unlist(lapply(samp.trees, function(x) sum(x$edge.length)))
   
+  ### Calculate GMax for every input tree:
   input.permutations[, "GMax"] <- unlist(lapply(trees, function(x) sum(x$root.time - ages[, "FAD"])))
+  
+  ### Calculate GMax for every random tree:
   rand.permutations[, "GMax"] <- unlist(lapply(rand.trees, function(x) sum(x$root.time - x$ages[, "FAD"])))
+  
+  ### If sampling trees calculate GMax for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GMax"] <- unlist(lapply(samp.trees, function(x) sum(x$root.time - x$ages[, "FAD"])))
   
+  ### Calculate GMin for every input tree:
   input.permutations[, "GMin"] <- unlist(lapply(trees, function(x) (x$root.time - max(ages[, "FAD"])) + diff(range(ages[, "FAD"]))))
+  
+  ### Calculate GMin for every random tree:
   rand.permutations[, "GMin"] <- unlist(lapply(rand.trees, function(x) (x$root.time - max(x$ages[, "FAD"])) + diff(range(x$ages[, "FAD"]))))
+  
+  ### If sampling trees calculate GMin for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GMin"] <- unlist(lapply(samp.trees, function(x) (x$root.time - max(x$ages[, "FAD"])) + diff(range(x$ages[, "FAD"]))))
   
+  ### Calculate Relative Completeness Index for every input tree:
   input.permutations[, "RCI"] <- (1 - (input.permutations[, "MIG"] / input.permutations[, "SRL"])) * 100
+  
+  ### Calculate Relative Completeness Index for every random tree:
   rand.permutations[, "RCI"] <- (1 - (rand.permutations[, "MIG"] / rand.permutations[, "SRL"])) * 100
+  
+  ### If sampling trees calculate Relative Completeness Index for every sampled tree:
   if(SamplingTrees) samp.permutations[, "RCI"] <- (1 - (samp.permutations[, "MIG"] / samp.permutations[, "SRL"])) * 100
   
+  ### Calculate Gap Excess Ratio for every input tree:
   input.permutations[, "GER"] <- 1 - ((input.permutations[, "MIG"] - input.permutations[, "GMin"]) / (input.permutations[, "GMax"] - input.permutations[, "GMin"]))
+  
+  ### Calculate Gap Excess Ratio for every random tree:
   rand.permutations[, "GER"] <- 1 - ((rand.permutations[, "MIG"] - rand.permutations[, "GMin"]) / (rand.permutations[, "GMax"] - rand.permutations[, "GMin"]))
+  
+  ### If sampling trees calculate Gap Excess Ratio for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GER"] <- 1 - ((samp.permutations[, "MIG"] - samp.permutations[, "GMin"]) / (samp.permutations[, "GMax"] - samp.permutations[, "GMin"]))
   
+  ### Calculate Manhattan Stratigraphic Measure* for every input tree:
   input.permutations[, "MSM*"] <- input.permutations[, "GMin"] / input.permutations[, "MIG"]
+  
+  ### Calculate Manhattan Stratigraphic Measure* for every random tree:
   rand.permutations[, "MSM*"] <- rand.permutations[, "GMin"] / rand.permutations[, "MIG"]
+  
+  ### If sampling trees calculate Manhattan Stratigraphic Measure* for every sampled tree:
   if(SamplingTrees) samp.permutations[, "MSM*"] <- samp.permutations[, "GMin"] / samp.permutations[, "MIG"]
   
+  ### Calculate Gap Excess Ratio* for every input tree:
   input.permutations[, "GER*"] <- unlist(lapply(as.list(input.permutations[, "MIG"]), function(x) sum(x <= rand.permutations[, "MIG"]) / rand.perm))
+  
+  ### If sampling trees calculate Gap Excess Ratio* for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GER*"] <- unlist(lapply(as.list(samp.permutations[, "MIG"]), function(x) sum(x <= rand.permutations[, "MIG"]) / rand.perm))
   
+  ### Calculate Gap Excess Ratiot for every input tree:
   input.permutations[, "GERt"] <- unlist(lapply(as.list(input.permutations[, "MIG"]), function(x) {y <- 1 - ((x - min(rand.permutations[, "MIG"])) / (max(rand.permutations[, "MIG"]) - min(rand.permutations[, "MIG"]))); if(y > 1) y <- 1; if(y < 0) y <- 0; y}))
+  
+  ### If sampling trees calculate Gap Excess Ratiot for every sampled tree:
   if(SamplingTrees) samp.permutations[, "GERt"] <- unlist(lapply(as.list(samp.permutations[, "MIG"]), function(x) {y <- 1 - ((x - min(rand.permutations[, "MIG"])) / (max(rand.permutations[, "MIG"]) - min(rand.permutations[, "MIG"]))); if(y > 1) y <- 1; if(y < 0) y <- 0; y}))
-  
-  
-  
-  
-  
   
   ### Estimate p-value for SCI:
   input.permutations[, "est.p.SCI"] <- stats::pnorm(asin(sqrt(input.permutations[, "SCI"])), mean(asin(sqrt(rand.permutations[, "SCI"]))), stats::sd(asin(sqrt(rand.permutations[, "SCI"]))), lower.tail = FALSE)
