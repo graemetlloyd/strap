@@ -158,14 +158,17 @@
 #' @export StratPhyloCongruence
 StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.perm = 1000, rand.perm = 1000, hard = TRUE, randomly.sample.ages = FALSE, fix.topology = TRUE, fix.outgroup = TRUE, outgroup.taxon = NULL, calculate.SCI = TRUE) {
   
-  # SRL only matters for taxa with ages so add option to not do double sampling from sample permutation of ages
-  # Instead of randomly shuffling tips randomly sample trees from bifurcations of consensus? Could be better at finding similar trees
-  # Check for repeating trees and remove?
-  # Also what about when tip count is super low?
-  # More checks of data format
-  # CHECK TREES HAVE SAME NUMBER OF TIPS AND SAME NAMES
-  # ADD USER INPUT OPTIONS FOR RANDOM TREES SAMPLE?
-  # MAKE SRL 1 IF EVER GETS TO ZERO?
+  # TO DO:
+  #
+  # - Additional checks of format of input data
+  #     1. Include whether trees have same tip count and tip labels.
+  # - Additional options for random trees:
+  #     1. Allow user to supply topologies (with/without branch lengths?)
+  #     2. Make random trees from random bifurcations of strict consensus of input trees (meaning more similar to input trees)
+  #     3. Check random topologies are unique and continue sampling until they are (will need check that there are enough possible
+  #        trees given constraints of N tips, fix topology etc.)
+  # - Make sure SRL makes sense in all cases (i.e., reset SRL to 1 if ever is zero and warn user if the case).
+  # - Enable additional option for SRL to only draw a single age between tips (commented out code present to do this slready).
   
   # Subfunction to calculate the SCI:
   StratigraphicConsistencyIndex <- function(tree, ages) {
