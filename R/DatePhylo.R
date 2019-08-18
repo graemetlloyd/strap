@@ -56,7 +56,7 @@ DatePhylo <- function(tree, ages, rlen = 0, method = "basic", add.terminal = FAL
   # Stop if taxon names do not match between tree and ages matrix:
   if(length(c(setdiff(tree$tip.label, rownames(ages)), setdiff(rownames(ages), tree$tip.label))) > 0) stop("Taxon names for tree and ages do not match.")
 
-  # Stop if the ages matrix does not have columns namd "FAD" and "LAD":
+  # Stop if the ages matrix does not have columns named "FAD" and "LAD":
   if(length(match(c("FAD", "LAD"), colnames(ages))) < 2) stop("Ages matrix must have FAD and LAD (First and Last Appearance Datum) columns.")
 
   # Stop if any FAD is younger than its LAD:
@@ -75,19 +75,19 @@ DatePhylo <- function(tree, ages, rlen = 0, method = "basic", add.terminal = FAL
   if(is.null(tree$edge.length) || method != "ruta") tree$edge.length <- rep(1, length(tree$edge[, 1]))
 
   # Get node numbers to start:
-  nodes <- c(Ntip(tree) + 1):(Nnode(tree) + Ntip(tree))
+  nodes <- c(ape::Ntip(tree) + 1):(ape::Nnode(tree) + ape::Ntip(tree))
   
   # Create vector for node ages:
   node.ages <- nodes
   
   # Get starting node ages:
-  for (i in 1:length(nodes)) node.ages[i] <- max(ages[tree$tip.label[FindDescendants(nodes[i], tree)], "FAD"])
+  for(i in 1:length(nodes)) node.ages[i] <- max(ages[tree$tip.label[FindDescendants(nodes[i], tree)], "FAD"])
   
   # Get all ages (tips and nodes):
   all.ages <- as.vector(c(ages[tree$tip.label, "FAD"], node.ages))
   
   # Set root age to maximum age plus root length:
-  all.ages[Ntip(tree) + 1] <- all.ages[Ntip(tree) + 1] + rlen
+  all.ages[ape::Ntip(tree) + 1] <- all.ages[ape::Ntip(tree) + 1] + rlen
   
   # Create time-scaled tree:
   time.tree <- tree
