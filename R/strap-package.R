@@ -37,7 +37,7 @@
 #' @importFrom graphics par points rect segments text
 #' @importFrom grDevices rgb
 #' @importFrom pbapply pblapply
-#' @importFrom stats pnorm runif sd
+#' @importFrom stats median pnorm runif sd
 #' @importFrom utils data
 NULL
 

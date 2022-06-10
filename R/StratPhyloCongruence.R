@@ -555,4 +555,4 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
 }
 
 # Test data run:
-#x <- StratPhyloCongruence(trees = lapply(Asaphidae$tree, function(x) {x$edge.length <- runif(nrow(x$edge)); x}), ages = Asaphidae$ages, rlen = 0, method = "basic", samp.perm = 100, rand.perm = 100, hard = TRUE, randomly.sample.ages = TRUE, fix.topology = TRUE, fix.outgroup = TRUE, outgroup.taxon = "Dikelocephalus")
+#x <- StratPhyloCongruence(trees = lapply(Asaphidae$tree, function(x) {x$edge.length <- stats::runif(nrow(x$edge)); x}), ages = Asaphidae$ages, rlen = 0, method = "basic", samp.perm = 100, rand.perm = 100, hard = TRUE, randomly.sample.ages = TRUE, fix.topology = TRUE, fix.outgroup = TRUE, outgroup.taxon = "Dikelocephalus")
