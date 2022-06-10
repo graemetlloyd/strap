@@ -1,15 +1,15 @@
 Package: strap
 Type: Package
 Title: Stratigraphic Tree Analysis for Palaeontology
-Version: 1.5-0
-Date: 2019-08-16
+Version: 1.6-0
+Date: 2022-06-10
 Authors@R: c(
     person(given = "Mark A.", family = "Bell",
-    email = "graemetlloyd@gmail.com", role = c("aut", "cre", "cph")),
+    email = "mark.bell521@gmail.com", role = c("aut", "cre", "cph")),
     person(given = "Graeme T.", family = "Lloyd",
     email = "graemetlloyd@gmail.com", role = c("aut", "cph"))
     )
-Maintainer: Mark A. Bell <mark.bell521@gmail.com>
+Maintainer: Graeme T. Lloyd <graemetlloyd@gmail.com>
 Depends:
     ape,
     geoscale
@@ -24,4 +24,4 @@ Encoding: UTF-8
 License: GPL (>=2)
 LazyData: yes
 ByteCompile: yes
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.2
