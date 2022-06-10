@@ -1,3 +1,8 @@
+Version - 1.6 - 2022-06-10
+
+- Fixes to package to work better with CRAN (changes invisible to user).
+- Added proto-versions of DateNodeHedman and DatePhyloHedman functions. These are not yet properly documented or tested.
+
 Version - 1.5 - 2019-08-17
 
 - Restructured package to work with the devtools package (changes invisible to user but makes package easier to update).
