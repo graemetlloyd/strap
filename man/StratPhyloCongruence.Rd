@@ -4,10 +4,20 @@
 \alias{StratPhyloCongruence}
 \title{Calculates fit to stratigraphy metrics for a set of tree(s)}
 \usage{
-StratPhyloCongruence(trees, ages, rlen = 0, method = "basic",
-  samp.perm = 1000, rand.perm = 1000, hard = TRUE,
-  randomly.sample.ages = FALSE, fix.topology = TRUE,
-  fix.outgroup = TRUE, outgroup.taxon = NULL, calculate.SCI = TRUE)
+StratPhyloCongruence(
+  trees,
+  ages,
+  rlen = 0,
+  method = "basic",
+  samp.perm = 1000,
+  rand.perm = 1000,
+  hard = TRUE,
+  randomly.sample.ages = FALSE,
+  fix.topology = TRUE,
+  fix.outgroup = TRUE,
+  outgroup.taxon = NULL,
+  calculate.SCI = TRUE
+)
 }
 \arguments{
 \item{trees}{Input tree(s) as either a phylo or multiphylo object.}

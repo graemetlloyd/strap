@@ -4,12 +4,29 @@
 \alias{geoscalePhylo.mod}
 \title{Plots a phylogeny against the geological time scale}
 \usage{
-geoscalePhylo.mod(tree, ages, occs, direction = "rightwards",
-  units = c("Period", "Epoch", "Age"), boxes = "Age",
-  tick.scale = "myr", user.scale, cex.age = 0.3, cex.ts = 0.3,
-  cex.tip = 0.3, width = 1, label.offset, ts.col = TRUE,
-  vers = "ICS2013", x.lim, quat.rm = FALSE, erotate, arotate, urotate,
-  ...)
+geoscalePhylo.mod(
+  tree,
+  ages,
+  occs,
+  direction = "rightwards",
+  units = c("Period", "Epoch", "Age"),
+  boxes = "Age",
+  tick.scale = "myr",
+  user.scale,
+  cex.age = 0.3,
+  cex.ts = 0.3,
+  cex.tip = 0.3,
+  width = 1,
+  label.offset,
+  ts.col = TRUE,
+  vers = "ICS2013",
+  x.lim,
+  quat.rm = FALSE,
+  erotate,
+  arotate,
+  urotate,
+  ...
+)
 }
 \arguments{
 \item{tree}{A tree as a phylo object.}

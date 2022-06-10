@@ -4,7 +4,9 @@
 \name{Dipnoi}
 \alias{Dipnoi}
 \title{Phylogeny and age data for dipnoans (lungfish)}
-\format{A list containing a tree (\code{$tree}) and a matrix of first and last appearances (\code{$ages}).}
+\format{
+A list containing a tree (\code{$tree}) and a matrix of first and last appearances (\code{$ages}).
+}
 \description{
 Phylogeny (first most parsimonious tree) and age data for lungfish (Osteichthyes, Sarcopterygii, Dipnoi) taken from Lloyd et al. (2012).
 }

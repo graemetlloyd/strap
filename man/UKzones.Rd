@@ -4,7 +4,9 @@
 \name{UKzones}
 \alias{UKzones}
 \title{British regional stages for the Ordovician}
-\format{A matrix containing the start and end ages for the British stage subdivisions of the Ordovician.}
+\format{
+A matrix containing the start and end ages for the British stage subdivisions of the Ordovician.
+}
 \description{
 The stratigraphic ranges for the British stages of the Ordovician.
 }
