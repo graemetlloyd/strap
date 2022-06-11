@@ -205,7 +205,7 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   }
   
   # If a single tree convert to list to ensure a standard format for input tree(s):
-  if(class(trees) == "phylo") trees <- list(trees)
+  if (inherits(x = trees, what = "phylo")) trees <- list(trees)
   
   # Strip names off trees:
   names(trees) <- NULL
