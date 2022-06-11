@@ -35,7 +35,7 @@
 #'
 #' The RCI was the first method to explicitly account for the absolute amount of missing data implied by the tree. This figure is usually expressed as the Minimum Implied Gap (MIG), a term also used by both the MSM and GER (see below), and corresponds to the sum of the branch lengths excluding the duration of the terminals (the observed ranges of the taxa). The RCI expresses the MIG as a proportion of the sum of the observed ranges (Simple Range Length; SRL) of the taxa converted to a percentage:
 #'
-#' RCI = (1 − (MIG/SRL)) ∗ 100percent
+#' RCI = (1 - (MIG/SRL)) * 100percent
 #'
 #' Importantly this value is not confined to a 0 to 100 percent scale, and can have both negative values and values greater than 100 percent, which can make it difficult to interpret.
 #'
@@ -47,7 +47,7 @@
 #'
 #' Where L0 is the length of the tree expressed by optimising times of first appearance on to the tree as a Sankoff character and taking the total length. Lm represents the same process, but for the optimal possible tree given the same set of first appearances. However, Pol and Norell (2001) noted a critical flaw in this approach, specifically that the Sankoff optimisation is reversible, meaning that nodes in the topology are allowed to be younger than their descendants, leading in some cases to a poor fit to stratigraphy being perceived as a good fit. Instead they suggest modifying the character step matrix to make the cost of reversals effectively infinite and hence impossible. Thus the values for L0 and Lm are modified accordingly. This approach they termed MSM* and is the implementation of MSM used here. This statistic can be expressed as:
 #'
-#' MSM∗ = Gmin/MIG
+#' MSM* = Gmin/MIG
 #'
 #' Where Gmin represents the MIG for the tree with the optimal fit to stratigraphy. In effect this is a completely unbalanced tree where the youngest pair of taxa are the most deeply nested and successive outgroups represent the next oldest taxon. Theoretically MSM* ranges from one (the best fit as the observed tree is the maximally consistent tree) to zero (the least optimal tree). However, in effect no tree can have a value of zero as its MIG would have to be equal to infinity.
 #'
@@ -55,7 +55,7 @@
 #'
 #' The GER represents a method that accounts for MIG, ranges from zero to one, and the best and worst fits to stratigraphy are both practically realisable. It can be expressed as:
 #'
-#' GER = 1 − ((MIG − Gmin)/(Gmax − Gmin))
+#' GER = 1 - ((MIG - Gmin)/(Gmax - Gmin))
 #'
 #' Where Gmax represents the MIG of the tree with the worst possible fit to stratigraphy. This is in effect any topology where the oldest taxon is the most deeply nested such that every clade in the tree contains it and hence must be minimally that old.
 #'
@@ -69,13 +69,13 @@
 #'
 #' More recently Wills et al. (2008) introduced two new versions of the GER that take advantage of the distribution of MIGs from the set of randomly generated topologies. The first of these (GERt) uses the extreme values of the random topologies as modified versions of Gmax and Gmin, termed Gtmax and Gtmin respectively. GERt is thus expressed as:
 #'
-#' GERt = 1 − ((MIG − Gtmin)/(Gtmax − Gtmin))
+#' GERt = 1 - ((MIG - Gtmin)/(Gtmax - Gtmin))
 #'
 #' In practice the MIG of the observed tree(s) may fall outside of these ranges so here a correction factor is employed so that any value below zero is corrected to zero, and any value above one is corrected to one. An additional stipulation for GERt is that the overall tree topology is fixed and only the taxa themselves are shuffled. This is to give a more realistic set of random topologies as there are known biases towards unbalanced trees in many palaeontological data sets. Here this is implemented by selecting the fix.topology=TRUE option. However, here GERt can also be calculated when fix.topology=FALSE.
 #'
 #' A second modification of GER is to use the position of the observed tree(s) in the sample of randomly generated topologies, such that:
 #'
-#' GER∗ = 1 − (F ractionof distribution <= MIG)
+#' GER* = 1 - (F ractionof distribution <= MIG)
 #'
 #' Thus if the MIG of the observed tree(s) is less than any randomly generated topology GER* will be one (maximally optimal fit) and if it worse than any of the randomly generated topologies it will be zero (maximally suboptimal fit).
 #'

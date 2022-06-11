@@ -20,7 +20,7 @@ DatePhyloHedman(
 
 \item{outgroup.ages}{A vector of numeric values representing the ages of the outgroup taxa that fall immediately outside of the root node.}
 
-\item{t0}{The absolute maaximum age allowable. This must be older than anything in either tip.ages or outgroup.ages.}
+\item{t0}{The absolute maximum age allowable. This must be older than anything in either tip.ages or outgroup.ages.}
 
 \item{resolution}{The number of ages to sample from the posterior distributionof each inferred node age.}
 
