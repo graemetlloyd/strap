@@ -130,12 +130,22 @@
 #'
 #' @examples
 #'
+#' \dontrun{ # Do not run for build purposes as slow
 #' # Calculate stratigraphic fit measures treating ages as ranges
 #' # (permutation numbers used are lower than recommended for standard use):
-#' fit.to.strat.1 <- StratPhyloCongruence(trees = Dipnoi$tree, ages = Dipnoi$ages, rlen = 0,
-#'   method = "basic", samp.perm = 5, rand.perm = 5, hard = TRUE,
-#'   randomly.sample.ages = FALSE, fix.topology = TRUE, fix.outgroup = TRUE,
-#'   outgroup.taxon = "Psarolepis_romeri")
+#' fit.to.strat.1 <- StratPhyloCongruence(
+#'   trees = Dipnoi$tree,
+#'   ages = Dipnoi$ages,
+#'   rlen = 0,
+#'   method = "basic",
+#'   samp.perm = 100,
+#'   rand.perm = 100,
+#'   hard = TRUE,
+#'   randomly.sample.ages = FALSE,
+#'   fix.topology = TRUE,
+#'   fix.outgroup = TRUE,
+#'   outgroup.taxon = "Psarolepis_romeri"
+#' )
 #'
 #' # View all output:
 #' fit.to.strat.1
@@ -148,10 +158,20 @@
 #'
 #' # Calculate stratigraphic fit measures treating ages as uncertainties
 #' # (permutation numbers used are lower than recommended for standard use):
-#' fit.to.strat.2 <- StratPhyloCongruence(trees = Dipnoi$tree, ages = Dipnoi$ages, rlen = 0,
-#'   method = "basic", samp.perm = 10, rand.perm = 10, hard = TRUE,
-#'   randomly.sample.ages = TRUE, fix.topology = TRUE, fix.outgroup = TRUE,
-#'   outgroup.taxon = "Psarolepis_romeri")
+#' fit.to.strat.2 <- StratPhyloCongruence(
+#'   trees = Dipnoi$tree,
+#'   ages = Dipnoi$ages,
+#'   rlen = 0,
+#'   method = "basic",
+#'   samp.perm = 100,
+#'   rand.perm = 100,
+#'   hard = TRUE,
+#'   randomly.sample.ages = TRUE,
+#'   fix.topology = TRUE,
+#'   fix.outgroup = TRUE,
+#'   outgroup.taxon = "Psarolepis_romeri"
+#' )
+#' }
 #'
 #' @export StratPhyloCongruence
 StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.perm = 1000, rand.perm = 1000, hard = TRUE, randomly.sample.ages = FALSE, fix.topology = TRUE, fix.outgroup = TRUE, outgroup.taxon = NULL, calculate.SCI = TRUE) {
