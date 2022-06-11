@@ -128,8 +128,6 @@
 #'
 #' Wills, M. A., Barrett, P. M. and Heathcote, J. F., 2008. The modified Gap Excess Ratio (GER*) and the stratigraphic congruence of dinosaur phylogenies. \emph{Systematic Biology}, \bold{57}, 891-904.
 #'
-#' @keywords congruence,phylogeny,stratigraphy
-#'
 #' @examples
 #'
 #' # Calculate stratigraphic fit measures treating ages as ranges

@@ -66,4 +66,3 @@ timePaleoPhy in paleotree package
 \author{
 Graeme T. Lloyd \email{graemetlloyd@gmail.com}
 }
-\keyword{phylogeny}

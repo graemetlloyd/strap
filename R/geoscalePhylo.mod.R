@@ -56,8 +56,6 @@
 #'
 #' Gradstein, F. M., Ogg, J. M., and Schmitz, M. 2012. A Geologic Time Scale. Elsevier, Boston, USA.
 #'
-#' @keywords phylogeny,stratigraphy
-#'
 #' @examples
 #'
 #' ### Example lungfish data

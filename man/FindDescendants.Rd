@@ -29,4 +29,3 @@ FindDescendants(n = 87, tree = Dipnoi$tree)
 \author{
 Graeme T. Lloyd \email{graemetlloyd@gmail.com}
 }
-\keyword{ancestor,descendant,phylogeny}

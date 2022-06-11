@@ -182,4 +182,3 @@ Wills, M. A., Barrett, P. M. and Heathcote, J. F., 2008. The modified Gap Excess
 \author{
 Mark A. Bell \email{mark.bell521@gmail.com} and Graeme T. Lloyd \email{graemetlloyd@gmail.com}
 }
-\keyword{congruence,phylogeny,stratigraphy}

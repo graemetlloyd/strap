@@ -27,4 +27,3 @@ Bell, M. A. and Lloyd, G. T., 2015. strap: an R package for plotting phylogenies
 \author{
 Mark A. Bell <mark.bell521@gmail.com>>
 }
-\keyword{congruence,geology,phylogeny,stratigraphy,timescale}

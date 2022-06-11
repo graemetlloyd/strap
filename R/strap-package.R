@@ -16,8 +16,6 @@
 #'
 #' Bell, M. A. and Lloyd, G. T., 2015. strap: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence. \emph{Palaeontology}, \bold{58}, 379-389.
 #'
-#' @keywords congruence,geology,phylogeny,stratigraphy,timescale
-#'
 #' @examples
 #' 
 #' # Calculate stratigraphic fit measures treating ages as ranges:

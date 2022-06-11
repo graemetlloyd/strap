@@ -154,4 +154,3 @@ Gradstein, F. M., Ogg, J. M., and Schmitz, M. 2012. A Geologic Time Scale. Elsev
 \author{
 Mark A. Bell \email{mark.bell521@gmail.com}
 }
-\keyword{phylogeny,stratigraphy}

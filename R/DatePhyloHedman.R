@@ -38,8 +38,6 @@
 #'
 #' @seealso timePaleoPhy in paleotree package
 #'
-#' @keywords phylogeny
-#'
 #' @examples
 #'
 #' # Time-scale the lungfish tree using the "equal" method and a root length of 1 Ma:

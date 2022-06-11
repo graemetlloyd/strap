@@ -15,8 +15,6 @@
 #'
 #' @author Graeme T. Lloyd \email{graemetlloyd@@gmail.com}
 #'
-#' @keywords ancestor,descendant,phylogeny
-#'
 #' @examples
 #'
 #' # Find descendants of the root node in the lungfish tree:
