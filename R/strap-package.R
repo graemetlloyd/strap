@@ -10,7 +10,7 @@
 #'
 #' @docType package
 #'
-#' @author Mark A. Bell <mark.bell521@@gmail.com>>
+#' @author Graeme T. Lloyd <graemetlloyd@@gmail.com>>
 #'
 #' @references
 #'
