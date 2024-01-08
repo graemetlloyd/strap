@@ -19,6 +19,8 @@ Imports:
     stats,
     utils
 Description: Functions for the stratigraphic analysis of phylogenetic trees.
+URL: https://github.com/graemetlloyd/strap
+BugReports: https://github.com/graemetlloyd/strap/issues
 Encoding: UTF-8
 License: GPL (>=2)
 LazyData: yes
