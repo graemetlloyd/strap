@@ -1,13 +1,14 @@
 citHeader("To cite package 'strap' in a publication use:")
 
-citEntry(entry = "Article",
-	title = "strap: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence",
-	author = personList(as.person("Mark A. Bell"), as.person("Graeme T. Lloyd")),
-	journal = "Palaeontology",
-  	year = "2015",
-	volume = "58",
-	pages = "379-389",
-	doi = "10.1111/pala.12142",
-	textVersion = "Bell, Mark A. and Lloyd, Graeme T. (2015). strap: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence. Palaeontology, 58, 379-389.")
+bibentry(bibtype = "Article",
+         title = "strap: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence",
+         author = c(as.person("Mark A. Bell"), as.person("Graeme T. Lloyd")),
+         journal = "Palaeontology",
+         year = "2015",
+         volume = "58",
+         pages = "379-389",
+         doi = "10.1111/pala.12142",
+         textVersion = "Bell, Mark A. and Lloyd, Graeme T. (2015). strap: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence. Palaeontology, 58, 379-389."
+         )
 
 citFooter("Best practice is to also cite the packge version number you used (found with 'library(help = strap)').")
