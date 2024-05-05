@@ -216,7 +216,7 @@ DatePhyloHedman <- function(
   }
   
   # Check tree is fully bifurcating:
-  if(!is.binary.tree(tree)) stop("Tree must be fully bifurcating.")
+  if(!ape::is.binary(phy = tree)) stop("Tree must be fully bifurcating.")
   
   # Ensure tip ages are in tree tip order:
   tip.ages <- tip.ages[tree$tip.label]
