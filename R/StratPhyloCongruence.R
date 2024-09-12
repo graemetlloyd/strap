@@ -193,15 +193,31 @@ StratPhyloCongruence <- function(trees, ages, rlen = 0, method = "basic", samp.p
   # Subfunction to calculate the SCI:
   StratigraphicConsistencyIndex <- function(tree, ages) {
     
+    # Get number of tips:
+    n_tips <- ape::Ntip(tree)
+    
     # Build vector of internal node numbers excluding the root:
-    NodeNumbers <- (Ntip(tree) + 2):(Ntip(tree) + tree$Nnode)
+    NodeNumbers <- (n_tips + 2):(n_tips + tree$Nnode)
     
     # Count consistent nodes:
-    ConsistentNodeCount <- sum(unlist(lapply(NodeNumbers, function(x) {CurrentNodeDescendants <- tree$tip.label[FindDescendants(x, tree)]; PreviousNodeDescendants <- setdiff(tree$tip.label[FindDescendants(tree$edge[tree$edge[, 2] == x, 1], tree)], CurrentNodeDescendants); max(ages[CurrentNodeDescendants, "FAD"]) >= max(ages[PreviousNodeDescendants, "FAD"])})))
+    ConsistentNodeCount <- sum(
+      x = unlist(
+        x = lapply(
+          X = NodeNumbers,
+          FUN = function(x) {
+            CurrentNodeDescendants <- tree$tip.label[FindDescendants(n = x, tree = tree)]
+            PreviousNodeDescendants <- setdiff(
+              x = tree$tip.label[FindDescendants(n = tree$edge[tree$edge[, 2] == x, 1], tree = tree)],
+              y = CurrentNodeDescendants
+            )
+            max(x = ages[PreviousNodeDescendants, "FAD"]) >= max(x = ages[CurrentNodeDescendants, "FAD"])
+          }
+        )
+      )
+    )
     
     # Return SCI:
-    return(ConsistentNodeCount / (tree$Nnode - 1))
-    
+    ConsistentNodeCount / (tree$Nnode - 1)
   }
   
   # If a single tree convert to list to ensure a standard format for input tree(s):

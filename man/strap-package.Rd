@@ -24,6 +24,14 @@ fit.to.strat.1$input.tree.results
 \references{
 Bell, M. A. and Lloyd, G. T., 2015. strap: an R package for plotting phylogenies against stratigraphy and assessing their stratigraphic congruence. \emph{Palaeontology}, \bold{58}, 379-389.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/graemetlloyd/strap}
+  \item Report bugs at \url{https://github.com/graemetlloyd/strap/issues}
+}
+
+}
 \author{
 Graeme T. Lloyd <graemetlloyd@gmail.com>>
 }
